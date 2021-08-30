@@ -30,7 +30,7 @@ def get_rise_set(year, month, day):
 
         def get_info(key, name):
             time = astroevents[key]
-            rise_set[key] = name + ' ' + time[:2] + ':' + time[2:]
+            rise_set[name] = time[:2] + ':' + time[2:]
 
         get_info('sunrise', '일출')
         get_info('sunset', '일몰')

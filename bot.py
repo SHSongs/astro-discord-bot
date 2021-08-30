@@ -39,8 +39,8 @@ async def today(ctx):
     send_text = ""
 
     rise_set_dict = get_rise_set(year, month, day)
-    for v in rise_set_dict.values():
-        send_text += f"{v}\n"
+    for k, v in rise_set_dict.items():
+        send_text += f"{k} : **{v}**\n"
 
     embed = discord.Embed(title=f"음력: {lunaday}", url="https://astro.kasi.re.kr/life/pageView/7",
                           description=send_text,
