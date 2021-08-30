@@ -6,7 +6,7 @@ from env import RiseKey
 
 year = 20210826
 
-location=quote("광주")
+location = quote("광주")
 
 url = f"http://apis.data.go.kr/B090041/openapi/service/RiseSetInfoService/getAreaRiseSetInfo?location={location}&locdate={year}&ServiceKey={RiseKey}"
 
@@ -33,13 +33,18 @@ if (rescode == 200):
     rDD = json.loads(rDJ)
     # json형식의 데이터를 dict 형식으로 변환
 
-    print(rDD)
     # 정상적으로 데이터가 출력되는지 확인
-
-    print(type(rDD))
 
     astroEvents = rDD['response']['body']['items']['item']
 
+    print(astroEvents)
+    for event in astroEvents:
+        print(event, astroEvents[event])
 
-    for i in astroEvents:
-        print(i)
+    sunrise = astroEvents['sunrise']
+    sunset = astroEvents['sunset']
+
+    sunrise = '일출 ' + sunrise[:2] + ':' + sunrise[2:]
+    sunset = '일출 ' + sunset[:2] + ':' + sunset[2:]
+    print(sunrise)
+    print(sunset)
