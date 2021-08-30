@@ -4,47 +4,43 @@ import xmltodict
 from urllib.parse import quote
 from env import RiseKey
 
-year = 20210826
 
-location = quote("광주")
+def get_rise_set(year, month, day):
+    date = str(year).zfill(4) + str(month).zfill(2) + str(day).zfill(2)
 
-url = f"http://apis.data.go.kr/B090041/openapi/service/RiseSetInfoService/getAreaRiseSetInfo?location={location}&locdate={year}&ServiceKey={RiseKey}"
+    location = quote("광주")
 
-print(type(url))
-# 데이터를 받을 url
+    url = f"http://apis.data.go.kr/B090041/openapi/service/RiseSetInfoService/getAreaRiseSetInfo?location={location}&locdate={date}&ServiceKey={RiseKey}"
 
-request = ul.Request(url)
-# url의 데이터를 요청함
+    request = ul.Request(url)
+    response = ul.urlopen(request)
+    rescode = response.getcode()
 
-response = ul.urlopen(request)
-# 요청받은 데이터를 열어줌
+    if (rescode == 200):
+        responsedata = response.read()
+        rd = xmltodict.parse(responsedata)
 
-rescode = response.getcode()
-# 제대로 데이터가 수신됐는지 확인하는 코드 성공시 200
-if (rescode == 200):
-    responseData = response.read()
-    # 요청받은 데이터를 읽음
-    rD = xmltodict.parse(responseData)
-    # XML형식의 데이터를 dict형식으로 변환시켜줌
+        rdj = json.dumps(rd)
 
-    rDJ = json.dumps(rD)
-    # dict 형식의 데이터를 json형식으로 변환
+        rdd = json.loads(rdj)
 
-    rDD = json.loads(rDJ)
-    # json형식의 데이터를 dict 형식으로 변환
+        astroevents = rdd['response']['body']['items']['item']
 
-    # 정상적으로 데이터가 출력되는지 확인
+        rise_set = {}
 
-    astroEvents = rDD['response']['body']['items']['item']
+        def get_info(key, name):
+            time = astroevents[key]
+            rise_set[key] = name + ' ' + time[:2] + ':' + time[2:]
 
-    print(astroEvents)
-    for event in astroEvents:
-        print(event, astroEvents[event])
+        get_info('sunrise', '일출')
+        get_info('sunset', '일몰')
+        get_info('moonrise', '월출')
+        get_info('moonset', '월몰')
 
-    sunrise = astroEvents['sunrise']
-    sunset = astroEvents['sunset']
+        return rise_set
 
-    sunrise = '일출 ' + sunrise[:2] + ':' + sunrise[2:]
-    sunset = '일출 ' + sunset[:2] + ':' + sunset[2:]
-    print(sunrise)
-    print(sunset)
+
+if __name__ == "__main__":
+    # execute only if run as a script
+    data = get_rise_set(2021, 8, 26)
+    print(data)
