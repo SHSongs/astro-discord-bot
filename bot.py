@@ -34,7 +34,7 @@ async def today(ctx):
     dateString = f"{year}-{str(month).zfill(2)}-{str(day).zfill(2)}"
     lunaday = moonday.get_luna_date(year, month, day)
 
-    picture = discord.File(f"moon-img/test{lunaday[8:]}.jpg")
+    picture = discord.File(f"moon-img/test{lunaday[8:]}.jpg", filename="image.jpg")
 
     send_text = ""
 
@@ -42,9 +42,12 @@ async def today(ctx):
     for v in rise_set_dict.values():
         send_text += f"{v}\n"
 
-    send_text += f"{dateString} \n {lunaday}"
+    embed = discord.Embed(title=f"음력: {lunaday}", url="https://astro.kasi.re.kr/life/pageView/7",
+                          description=send_text,
+                          color=0xFF5733)
+    embed.set_thumbnail(url="attachment://image.jpg")
 
-    await ctx.send(send_text, file=picture)
+    await ctx.send(embed=embed, file=picture)
 
 
 bot.run(Tocken)
