@@ -2,6 +2,7 @@ import discord
 from discord.ext.commands import Bot
 from env import Tocken
 import datetime
+from pytz import timezone
 import moonday
 from RiseSet import get_rise_set
 
@@ -26,7 +27,9 @@ async def hello(ctx):
 
 @bot.command()
 async def today(ctx):
-    now = datetime.datetime.now()
+
+    now = datetime.datetime.now(timezone('Asia/Seoul'))
+
     year = now.year
     month = now.month
     day = now.day
